@@ -12,12 +12,47 @@ namespace MySimpleAnimeList.ViewModel
 {
     class MainVM : ViewModelBase
     {
+        public RelayCommand New
+        {
+            get
+            {
+                return new RelayCommand(NewFile);
+            }
+        }
+        public RelayCommand Open
+        {
+            get
+            {
+                return new RelayCommand(OpenFile);
+            }
+        }
+        public RelayCommand Save
+        {
+            get
+            {
+                return new RelayCommand(SaveFile);
+            }
+        }
         public RelayCommand SaveAs
         {
             get
             {
                 return new RelayCommand(SaveFileAs);
             }
+        }
+
+        private void NewFile()
+        {
+
+        }
+        private void OpenFile()
+        {
+
+        }
+
+        private void SaveFile()
+        {
+
         }
 
         private void SaveFileAs()

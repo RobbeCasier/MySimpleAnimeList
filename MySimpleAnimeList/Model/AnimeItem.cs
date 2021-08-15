@@ -10,7 +10,8 @@ namespace MySimpleAnimeList.Model
     {
         NORMAL,
         OVA,
-        ONA
+        ONA,
+        MOVIE
     }
 
     class AnimeItem
