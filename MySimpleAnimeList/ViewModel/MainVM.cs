@@ -1,8 +1,12 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
+using MySimpleAnimeList.Model;
+using MySimpleAnimeList.Windows;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,6 +16,23 @@ namespace MySimpleAnimeList.ViewModel
 {
     class MainVM : ViewModelBase
     {
+        EntryWindow ew;
+        public ObservableCollection<AnimeItem> AllEntries { get; set; } = new ObservableCollection<AnimeItem>();
+
+        private AnimeItem _newItem;
+        public AnimeItem NewItem
+        {
+            get
+            {
+                return _newItem;
+            }
+            set
+            {
+                _newItem = value;
+
+                
+            }
+        }
         public RelayCommand New
         {
             get
@@ -41,6 +62,22 @@ namespace MySimpleAnimeList.ViewModel
             }
         }
 
+        public RelayCommand AddEntry
+        {
+            get
+            {
+                return new RelayCommand(AddNewEntry);
+            }
+        }
+
+        public RelayCommand AddEntryToList
+        {
+            get
+            {
+                return new RelayCommand(AddNewEntryToList);
+            }
+        }
+
         private void NewFile()
         {
 
@@ -57,6 +94,7 @@ namespace MySimpleAnimeList.ViewModel
 
         private void SaveFileAs()
         {
+            //setup savefiledialog
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             saveFileDialog.FileName = "MyAnimeList";
@@ -64,10 +102,34 @@ namespace MySimpleAnimeList.ViewModel
             saveFileDialog.Filter = "Json File (*.json)|*.json";
             saveFileDialog.OverwritePrompt = true;
 
-            saveFileDialog.ShowDialog();
+            //open savefiledialog
+            //https://stackoverflow.com/questions/23539219/dialogresult-ok-on-savefiledialog-not-work
+            bool? result = saveFileDialog.ShowDialog();
 
-            string json = ""; //Json convert
-            File.WriteAllText(saveFileDialog.FileName, json);
+            //if person clicked save
+            if ((bool)result)
+            {
+                string json = JsonConvert.SerializeObject(AllEntries.ToArray());
+                File.WriteAllText(saveFileDialog.FileName, json);
+            }
+        }
+
+        private void AddNewEntry()
+        {
+            NewItem = new AnimeItem();
+            ew = new EntryWindow();
+            ew.DataContext = this;
+            ew.Show();
+        }
+
+        void AddNewEntryToList()
+        {
+            AllEntries.Add(NewItem);
+            if (ew != null)
+            {
+                ew.Close();
+                ew = null;
+            }
         }
     }
 }

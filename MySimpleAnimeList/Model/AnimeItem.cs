@@ -21,5 +21,6 @@ namespace MySimpleAnimeList.Model
         public int NrEpisodes { get; set; }
         public int Season { get; set; }
         public bool NewSerie { get; set; }
+        public AnimeType Type { get; set; }
     }
 }
